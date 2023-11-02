@@ -1,6 +1,6 @@
 // 機率計算參考 https://stella-blog.coderbridge.io/2021/05/17/react/
 export function getPrice(obj){
-    let sortArr = obj.value.sort((a, b) => a.probability - b.probability)
+    let sortArr = obj.sort((a, b) => a.probability - b.probability)
     let weightArray = sortArr.map((_, index) => {
         //利用 .map 做一個計數累加
         let count = 0;
@@ -20,5 +20,5 @@ export function getPrice(obj){
             break;
         }
     }
-    return obj.value[index].item
+    return obj[index].item
 }
