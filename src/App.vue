@@ -1,21 +1,25 @@
 <script setup>
 import {RouterLink} from 'vue-router'
-import Content from '@/components/Content.vue'
+import { useBoxStore } from "@/stores/random";
+const store = useBoxStore()
+
+const reset = () => {
+    store.$reset()
+}
 </script>
 
 <template>
     <header>
         <section>
-            <h1>AAA</h1>
+            <h1><RouterLink to="/">Home</RouterLink></h1>
             <nav>
-                <RouterLink to="/">Home</RouterLink>
-                <RouterLink to="/apple">Apple</RouterLink>
+                <RouterLink to="/lottery" @click="reset">Lottery</RouterLink>
             </nav>
         </section>
     </header>
 
     <main>
-        <Content />
+        <RouterView />
     </main>
 </template>
 
