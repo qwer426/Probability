@@ -1,0 +1,52 @@
+{
+  "hair" : [
+    {
+      "item": "黑色微亂捲捲髮型",
+      "probability": 0.015
+    },
+    {
+      "item": "黑色美娜髮型",
+      "probability": 0.015
+    },
+    {
+      "item": "黑色希拉造型",
+      "probability": 0.06
+    },
+    {
+      "item": "黑色超長波浪造型",
+      "probability": 0.06
+    },
+    {
+      "item": "黑色春漾髮型",
+      "probability": 0.06
+    },
+    {
+      "item": "黑色逗號造型",
+      "probability": 0.06
+    },
+    {
+      "item": "黑色球球髮型",
+      "probability": 0.06
+    },
+    {
+      "item": "黑色短翹造型",
+      "probability": 0.134
+    },
+    {
+      "item": "黑色珍珠小結造型",
+      "probability": 0.134
+    },
+    {
+      "item": "黑色蝴蝶髮束造型",
+      "probability": 0.134
+    },
+    {
+      "item": "黑色單辮瀏海造型",
+      "probability": 0.134
+    },
+    {
+      "item": "黑色蘋果層次造型",
+      "probability": 0.134
+    }
+  ]
+}

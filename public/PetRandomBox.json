@@ -1,0 +1,180 @@
+{
+  "pet" : [
+    {
+      "item": "兔子鼓手寵物",
+      "probability": 0.007
+    },
+    {
+      "item": "玩具鴨寵物",
+      "probability": 0.007
+    },
+    {
+      "item": "木馬士兵寵物",
+      "probability": 0.007
+    },
+    {
+      "item": "特殊血腥皇后",
+      "probability": 0.01
+    },
+    {
+      "item": "特殊斑斑",
+      "probability": 0.01
+    },
+    {
+      "item": "特殊比艾樂",
+      "probability": 0.01
+    },
+    {
+      "item": "褐色小狗",
+      "probability": 0.038
+    },
+    {
+      "item": "粉紅兔子",
+      "probability": 0.038
+    },
+    {
+      "item": "小魔龍",
+      "probability": 0.038
+    },
+    {
+      "item": "黑色小貓",
+      "probability": 0.038
+    },
+    {
+      "item": "白色兔子",
+      "probability": 0.038
+    },
+    {
+      "item": "熊貓",
+      "probability": 0.038
+    },
+    {
+      "item": "迪諾龍",
+      "probability": 0.0285
+    },
+    {
+      "item": "妮諾龍",
+      "probability": 0.0285
+    },
+    {
+      "item": "猴子",
+      "probability": 0.0285
+    },
+    {
+      "item": "大象",
+      "probability": 0.0285
+    },
+    {
+      "item": "雲豹",
+      "probability": 0.0285
+    },
+    {
+      "item": "雪吉拉",
+      "probability": 0.0285
+    },
+    {
+      "item": "火雞",
+      "probability": 0.0285
+    },
+    {
+      "item": "小企鵝",
+      "probability": 0.0285
+    },
+    {
+      "item": "小巴洛古",
+      "probability": 0.0285
+    },
+    {
+      "item": "豬八戒",
+      "probability": 0.0285
+    },
+    {
+      "item": "小刺蝟",
+      "probability": 0.0285
+    },
+    {
+      "item": "菇菇寶貝",
+      "probability": 0.0285
+    },
+    {
+      "item": "小帥虎",
+      "probability": 0.019
+    },
+    {
+      "item": "臭鼬",
+      "probability": 0.019
+    },
+    {
+      "item": "噴水鯨魚",
+      "probability": 0.019
+    },
+    {
+      "item": "鸚鵡噓噓",
+      "probability": 0.019
+    },
+    {
+      "item": "海獺阿德力",
+      "probability": 0.019
+    },
+    {
+      "item": "猩猩龐克",
+      "probability": 0.019
+    },
+    {
+      "item": "迷你冰騎士",
+      "probability": 0.019
+    },
+    {
+      "item": "甜美犰狳",
+      "probability": 0.019
+    },
+    {
+      "item": "檸檬犰狳",
+      "probability": 0.019
+    },
+    {
+      "item": "綠色犰狳",
+      "probability": 0.019
+    },
+    {
+      "item": "生栗子",
+      "probability": 0.019
+    },
+    {
+      "item": "小栗子",
+      "probability": 0.019
+    },
+    {
+      "item": "烤焦栗子",
+      "probability": 0.019
+    },
+    {
+      "item": "灰色哈士奇",
+      "probability": 0.019
+    },
+    {
+      "item": "小萊伊",
+      "probability": 0.019
+    },
+    {
+      "item": "小波波",
+      "probability": 0.019
+    },
+    {
+      "item": "小阿樂",
+      "probability": 0.019
+    },
+    {
+      "item": "松鼠亞倫",
+      "probability": 0.019
+    },
+    {
+      "item": "松鼠薄荷",
+      "probability": 0.019
+    },
+    {
+      "item": "松鼠娉可",
+      "probability": 0.019
+    }
+  ]
+}
