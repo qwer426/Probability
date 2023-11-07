@@ -7,7 +7,7 @@ export function getPriceArray(arr){
         for (let i = 0; i <= index; i++) {
             count += sortArr[i].probability;
         }
-        return count;
+        return count.toFixed(2) * 1;
     });
 }
 export function getPrice(obj, weightArray){

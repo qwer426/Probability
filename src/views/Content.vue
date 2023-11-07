@@ -1,10 +1,12 @@
 <script setup>
 import {RouterLink, RouterView, useRoute} from 'vue-router'
-import { ref, onMounted, computed } from "vue";
+import {ref, computed, watch, onMounted} from "vue";
 const jsonData = ref([]);
 
 
 const route = useRoute()
+
+const path_array = ref(['apple', 'pet', 'hair'])
 
 const target = computed(() => {
     let arr = []
@@ -18,10 +20,11 @@ const target = computed(() => {
     }
     return arr
 })
+const path_data = ref('')
 
-const path_data = computed(() => {
+const getData = async (newName) => {
     let name = ''
-    switch (route.name) {
+    switch (newName) {
         case 'apple':
             name = 'products'
             break;
@@ -32,14 +35,25 @@ const path_data = computed(() => {
             name = 'RandomHair'
             break;
     }
-    return `../../public/${name}.json`
-})
+    path_data.value =  `../../public/${name}.json`
+    if (newName !== 'lottery') await fetchData()
+}
+
+watch(
+    () => route.name,
+    async newName => {
+        await getData(newName)
+    }
+)
+
+
 
 const fetchData = async () => {
     try {
         const response = await fetch(path_data.value);
         if (response.ok) {
-            jsonData.value = await response.json();
+            jsonData.value = await response.json()
+            jsonData.value[route.name] = jsonData.value[route.name].sort((a, b) => a.probability - b.probability)
         } else {
             console.error('Failed to fetch data');
         }
@@ -47,23 +61,18 @@ const fetchData = async () => {
         console.error('Error fetching data:', error);
     }
 };
+
 onMounted(() => {
-    fetchData()
-});
+    getData(route.name)
+})
 </script>
 
 <template>
     <section class="main_nav" v-if="route.name === 'lottery'">
         <nav class="menu">
             <ul>
-                <li @click="fetchData()">
-                    <RouterLink class="nav_link" to="/lottery/apple">apple</RouterLink>
-                </li>
-                <li @click="fetchData()">
-                    <RouterLink class="nav_link" to="/lottery/pet">Pet</RouterLink>
-                </li>
-                <li @click="fetchData()">
-                    <RouterLink class="nav_link" to="/lottery/hair">hair</RouterLink>
+                <li v-for="path of path_array" :key="path">
+                    <RouterLink class="nav_link" :to="`/lottery/${path}`">{{ path }}</RouterLink>
                 </li>
             </ul>
         </nav>

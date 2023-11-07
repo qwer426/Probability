@@ -25,18 +25,33 @@ const pet_price = computed(() => {
     return res
 })
 
+// 大獎機率
+const probability = computed(() => {
+    if (store.big_price === 0 || store.total === 0) {
+        return 0
+    } else {
+        return store.big_price / store.total
+    }
+})
+
 const is_price = (pet) => {
     return props.target.includes(pet)
 }
 
 const getSinglePrice = () => {
     store.box_item = getPrice(props.data, box_list.value)
+    store.total += 1
 }
 const getHunPrice = () => {
     store.box_price = []
+    let res = []
     for (let i = 0; i < 100; i++) {
-        store.box_price.push(getPrice(props.data, box_list.value))
+        const price = getPrice(props.data, box_list.value)
+        store.box_price.push(price)
+        if (props.target.includes(price)) res.push(price)
     }
+    store.big_price += res.length
+    store.total += 100
 }
 const clearCLick = () => {
     store.$reset()
@@ -58,6 +73,15 @@ const clearCLick = () => {
         </div>
         <div>
             獎數: {{ pet_price.length }}
+        </div>
+        <div>
+            累計抽取數: {{ store.total }}
+        </div>
+        <div>
+            累計獎數: {{ store.big_price }}
+        </div>
+        <div>
+            機率: {{ probability }}
         </div>
         <div class="content">
             <div class="item" :class="{ big: is_price(el) }" v-for="(el, index) of store.box_price" :key="`${index}${el}`">
