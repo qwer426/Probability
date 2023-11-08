@@ -29,6 +29,11 @@ const router = createRouter({
                     path: 'hair',
                     name: 'hair',
                     component: () => import('../components/Random.vue'),
+                },
+                {
+                    path: 'cube',
+                    name: 'cube',
+                    component: () => import('../components/CubeType.vue'),
                 }
             ]
         },

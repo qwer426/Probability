@@ -1,12 +1,13 @@
 <script setup>
 import {RouterLink, RouterView, useRoute} from 'vue-router'
-import {ref, computed, watch, onMounted} from "vue";
+import {ref, computed, watch, onMounted, provide} from "vue";
 const jsonData = ref([]);
 
+provide('data', jsonData)
 
 const route = useRoute()
 
-const path_array = ref(['apple', 'pet', 'hair'])
+const path_array = ref(['apple', 'pet', 'hair', 'cube'])
 
 const target = computed(() => {
     let arr = []
@@ -34,6 +35,9 @@ const getData = async (newName) => {
         case 'hair':
             name = 'RandomHair'
             break;
+        case 'cube':
+            name = 'legend'
+            break;
     }
     path_data.value =  `../../public/${name}.json`
     if (newName !== 'lottery') await fetchData()
@@ -53,7 +57,8 @@ const fetchData = async () => {
         const response = await fetch(path_data.value);
         if (response.ok) {
             jsonData.value = await response.json()
-            jsonData.value[route.name] = jsonData.value[route.name].sort((a, b) => a.probability - b.probability)
+            if (route.name !== 'cube') jsonData.value[route.name] = jsonData.value[route.name].sort((a, b) => a.probability - b.probability)
+
         } else {
             console.error('Failed to fetch data');
         }
@@ -72,6 +77,7 @@ onMounted(() => {
         <nav class="menu">
             <ul>
                 <li v-for="path of path_array" :key="path">
+
                     <RouterLink class="nav_link" :to="`/lottery/${path}`">{{ path }}</RouterLink>
                 </li>
             </ul>
@@ -80,9 +86,14 @@ onMounted(() => {
     <section class="main" v-else>
         <div class="list">
             <h3>機率表</h3>
-            <div class="list_item" v-for="(el, index) of jsonData[route.name]" :key="`${index}${el.item}`">
-                <span class="title">{{ el.item }}</span>
-                <span class="probability">({{ (el.probability * 100).toFixed(2) }}%)</span>
+            <div v-if="route.name !== 'cube'" class="list_item" v-for="(el, index) of jsonData[route.name]" :key="`${index}${el.item}`">
+               <span class="title">{{ el.item }}</span>
+               <span class="probability">({{ (el.probability * 100).toFixed(2) }}%)</span>
+            </div>
+            <div v-else class="list_item" v-for="(el, index) of jsonData" :key="`${index}`">
+                <div>
+                    {{ index }}
+                </div>
             </div>
         </div>
         <div>
