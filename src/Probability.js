@@ -10,11 +10,11 @@ export function getPriceArray(arr){
         return count.toFixed(2) * 1;
     });
 }
-export function getPrice(obj, weightArray){
+export function getPrice(arr, weightArray){
     //用 Math.random()取得 0~1的值
     let random = Math.random() * weightArray[weightArray.length - 1];
     // 找出機率表內 最接近隨機機率的item
     const index = weightArray.findIndex(el => el >= random)
-    return obj[index].item
+    return arr[index].item
 
 }

@@ -6,25 +6,33 @@ import {getPrice, getPriceArray} from "@/Probability";
 
 const data = inject('data')
 const props = defineProps({
+    cube_name: 'String',
     cube_item: 'String',
 })
+
+
 const store = useItemAbility()
 
-// 目前使用哪個部位
-const HexaList = computed(() => {
-    let arr = []
-    for (const el of data.value[props.cube_item]) {
-        arr.push({
-            item: el['屬性'],
-            probability: el['閃炫']
-        })
-    }
-    return arr
+
+// 目前使用哪個部位 傳說機率
+const legendList = computed(() => {
+    return data.value.legend[props.cube_item].map(el => ({
+        item: el.item,
+        probability: el[props.cube_name],
+    }))
 })
-// 單抽機率表
-const box_list = computed(() => {
-    return getPriceArray(HexaList.value)
+
+// 目前使用哪個部位 罕見機率
+const rareList = computed(() => {
+    return data.value.rare[props.cube_item].map(el => ({
+        item: el.item,
+        probability: el[props.cube_name],
+    }))
 })
+
+// 單抽機率
+const legend_list = computed(() => getPriceArray(legendList.value))
+const rare_list = computed(() => getPriceArray(rareList.value))
 
 const arr = [
     {
@@ -44,11 +52,9 @@ const arr = [
     }
 ]
 
-const realItem = ref(['legend', 'rare', 'rare'])
 const isHaveChance = ref(0)
 
 const setProbability = ref(null)
-const Probability = ref(null)
 
 const idx = computed(() => {
     return  setProbability.value ? arr.findIndex(el => el.set >= setProbability.value) : null
@@ -60,39 +66,35 @@ const getRandom = () => {
 
 const getProbability = () => {
     setProbability.value = getRandom()
+    store.cubeNumObj[props.cube_name] += 1
     if (isHaveChance.value === 0) isHaveChance.value += 1
 }
 
 const setItem = () => {
-    Probability.value = getRandom()
-    let val = Math.random()
-    let content = getPrice(HexaList.value, box_list.value)
-    if (idx) {
-        if (val <= arr[idx.value].legend) {
-            if (!content.includes('減少所有技能冷卻時間') && !content.includes('無視') && !content.includes('怪物')) {
-                if (content.includes('%')) {
-                    if (content.includes('全屬')) content = content.replace('%', '10%')
-                    else content = content.replace('%', '13%')
+    let val = getRandom()
+    let itemList = val <= 0.15 ? legendList.value : rareList.value
+    let item_list = val <= 0.15 ? legend_list.value : rare_list.value
+    let content = getPrice(itemList, item_list)
+    isHaveChance.value -= 1
 
-                } else {
-                    content += '(傳)'
-                }
+    // 防止 3無 3boss 3道具
+
+    const preventRepeat = key => {
+        if (store.Ability[props.cube_item].filter(el => el.includes(key)).length === 2) {
+            let newContent = content
+            while (newContent === content) {
+                newContent = getPrice(itemList, item_list)
             }
-            store.Ability[idx.value] = content
-        } else {
-            if (!content.includes('減少所有技能冷卻時間') && !content.includes('無視') && !content.includes('怪物')) {
-                if (content.includes('%')) {
-                    if (content.includes('全屬')) content = content.replace('%', '7%')
-                    else content = content.replace('%', '10%')
-                } else {
-                    content += '(罕)'
-                }
-            } else if (content.includes('無視') && content.includes('怪物')) {
-                if (content.includes('40%')) content = content.replace('40%', '30%')
-                else if (content.includes('35%')) content = content.replace('35%', '30%')
-            }
-            store.Ability[idx.value] = content
+            content = newContent
         }
+    }
+    preventRepeat('怪物')
+    preventRepeat('無視')
+    preventRepeat('道具')
+
+    // 處理潛能數值顯示
+    if (idx) {
+        store.Ability[props.cube_item][idx.value] = content
     }
 }
 
@@ -103,10 +105,11 @@ const setItem = () => {
     <div class="Hexacube">
         <button @click="getProbability">再一次</button>
         <button :disabled="!isHaveChance" @click="setItem">使用</button>
-        <h1>Uni</h1>
+        <h1>{{ cube_name }}方塊</h1>
+        <div>顆數 : {{ store.cubeNumObj[props.cube_name] }} </div>
         <div class="cubeBox">
             <div
-                v-for="(el, index) of store.Ability"
+                v-for="(el, index) of store.Ability[props.cube_item]"
                 class="ability"
                 :key="`${index}${el}`"
                 :class="{ active: idx === index }"
