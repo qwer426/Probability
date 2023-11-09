@@ -177,7 +177,9 @@ function setAbility() {
 
 <template>
     <div class="Hexacube">
-        <button @click="setItem">使用</button>
+        <div class="cubeButton">
+            <button @click="setItem">使用</button>
+        </div>
         <h1>{{ cube_name }}方塊</h1>
         <div>顆數 : {{ store.cubeNumObj[props.cube_name] }}</div>
         <div class="cubeBox">
@@ -207,10 +209,17 @@ function setAbility() {
 </template>
 
 <style scoped lang="scss">
+.cubeButton {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .cubeBox {
     border: 1px solid #333;
     padding: 5px;
     position: relative;
+
     .ability {
         padding: 0 10px;
     }
@@ -218,10 +227,12 @@ function setAbility() {
     .active {
         background-color: rgba(0, 0, 0, 0.2);
     }
+
     .isH {
         cursor: pointer;
     }
-    .holeArea{
+
+    .holeArea {
         position: absolute;
         top: 0;
         left: 0;

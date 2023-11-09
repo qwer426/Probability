@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import {ref, computed} from 'vue'
 import {inject} from "vue";
 import {useItemAbility} from "@/stores/item_ability";
 import {getPrice, getPriceArray} from "@/Probability";
@@ -57,7 +57,7 @@ const isHaveChance = ref(0)
 const setProbability = ref(null)
 
 const idx = computed(() => {
-    return  setProbability.value ? arr.findIndex(el => el.set >= setProbability.value) : null
+    return setProbability.value ? arr.findIndex(el => el.set >= setProbability.value) : null
 })
 
 const getRandom = () => {
@@ -103,10 +103,12 @@ const setItem = () => {
 
 <template>
     <div class="Hexacube">
-        <button @click="getProbability">再一次</button>
-        <button :disabled="!isHaveChance" @click="setItem">使用</button>
+        <div class="cubeButton">
+            <button @click="getProbability">再一次</button>
+            <button :disabled="!isHaveChance" @click="setItem">使用</button>
+        </div>
         <h1>{{ cube_name }}方塊</h1>
-        <div>顆數 : {{ store.cubeNumObj[props.cube_name] }} </div>
+        <div>顆數 : {{ store.cubeNumObj[props.cube_name] }}</div>
         <div class="cubeBox">
             <div
                 v-for="(el, index) of store.Ability[props.cube_item]"
@@ -121,15 +123,23 @@ const setItem = () => {
 </template>
 
 <style scoped lang="scss">
-.cubeBox{
+.cubeButton {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.cubeBox {
     border: 1px solid #333;
     padding: 5px;
+
     .ability {
         padding: 0 10px;
 
     }
+
     .active {
-        background-color: rgba(0,0,0, 0.2);
+        background-color: rgba(0, 0, 0, 0.2);
     }
 }
 </style>

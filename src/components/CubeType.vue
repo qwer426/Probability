@@ -60,12 +60,14 @@ const onChange = (e) => {
 
 <template>
     <section>
-        <select name="cube" id="cube_select" @change="onChange">
-            <option v-for="el of cube_arr" >{{ el.cubeChin }}</option>
-        </select>
-        <select name="cube_item" id="cube_item" v-model="cube_item">
-            <option v-for="el of cube_item_arr" :value="el">{{ el }}</option>
-        </select>
+        <div class="selectGroup">
+            <select name="cube" id="cube_select" @change="onChange">
+                <option v-for="el of cube_arr">{{ el.cubeChin }}</option>
+            </select>
+            <select name="cube_item" id="cube_item" v-model="cube_item">
+                <option v-for="el of cube_item_arr" :value="el">{{ el }}</option>
+            </select>
+        </div>
         <KeepAlive>
             <component :is="cube" :cube_name="cubeChin" :cube_item="cube_item"></component>
         </KeepAlive>
@@ -74,10 +76,16 @@ const onChange = (e) => {
 
 <style>
 section {
+    .selectGroup {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
     #cube_select, #cube_item {
         width: 100px;
-        padding: 10px 5px;
-        font-size: 18px;
+        padding: 8px 15px 5px;
+        font-size: 16px;
     }
 }
 </style>

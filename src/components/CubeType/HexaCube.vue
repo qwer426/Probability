@@ -100,7 +100,7 @@ const setProbability = () => {
     if (lock.value.length !== 3) {
         console.log('未選3排')
     } else {
-        for (let i =0; i < store.Ability[props.cube_item].length; i++) {
+        for (let i = 0; i < store.Ability[props.cube_item].length; i++) {
             store.Ability[props.cube_item][i] = Probability.value[lock.value[i]]
         }
         isDice.value = false
@@ -125,10 +125,12 @@ const lockAbility = (idx) => {
 
 <template>
     <div class="Hexacube">
-        <button :disabled="isDice" @click="getProbability">使用</button>
-        <button :disabled="!isDice" @click="setProbability">確定</button>
+        <div class="cubeButton">
+            <button :disabled="isDice" @click="getProbability">使用</button>
+            <button :disabled="!isDice" @click="setProbability">確定</button>
+        </div>
         <h1>{{ cube_name }}方塊</h1>
-        <div>顆數 : {{ store.cubeNumObj[props.cube_name]  }}</div>
+        <div>顆數 : {{ store.cubeNumObj[props.cube_name] }}</div>
         <div class="cubeBox" v-if="isDice">
             <div
                 v-for="(el, idx) of Probability"
@@ -153,6 +155,12 @@ const lockAbility = (idx) => {
 </template>
 
 <style scoped lang="scss">
+.cubeButton {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .cubeBox {
     border: 1px solid #333;
     padding: 5px;
