@@ -5,7 +5,7 @@
     <main>
         <h3>welcome</h3>
         <div class="content_box">
-
+            純屬練習用
         </div>
     </main>
 </template>
@@ -22,6 +22,7 @@ main{
         border: 3px double #333;
         padding: 15px;
         box-sizing: border-box;
+        text-align: center;
     }
 }
 </style>

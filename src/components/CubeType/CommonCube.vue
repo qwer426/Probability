@@ -1,6 +1,5 @@
 <script setup>
-import {ref, computed} from 'vue'
-import {inject} from "vue";
+import {ref, computed, watch, inject} from 'vue'
 import {useItemAbility} from "@/stores/item_ability";
 import {getPrice, getPriceArray} from "@/Probability";
 
@@ -74,6 +73,11 @@ const currArr = computed(() => {
 })
 
 const idx = ref(-1)
+
+watch(() => props.cube_name, () => {
+    console.log(props.cube_name)
+    idx.value = -1
+})
 
 const setIndex = (e, index) => {
     if (props.cube_name !== '恢復') return

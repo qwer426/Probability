@@ -23,3 +23,16 @@ button + button {
 select + select {
     margin-left: 10px;
 }
+
+a {
+    text-decoration: none;
+    color: #333;
+    border-radius: 5px;
+    border: 1px solid #333;
+    padding: 5px 15px;
+    display: block;
+}
+
+a:hover {
+    background: rgba(0,0,0,0.2);
+}

@@ -81,10 +81,10 @@ const clearCLick = () => {
     <div class="about">
         <h3>diceeeee~</h3>
         <div class="buttonGroup">
-            <button class="btn" @click="getSinglePrice">單抽</button>
-            <button class="btn" @click="getHunPrice">百抽</button>
-            <button class="btn" @click="getSingleBox">金箱</button>
-            <button class="btn" @click="clearCLick">清除</button>
+            <div><button class="btn" @click="getSinglePrice">單抽</button></div>
+            <div><button class="btn" @click="getHunPrice">百抽</button></div>
+            <div><button class="btn" @click="getSingleBox">金箱</button></div>
+            <div><button class="btn" @click="clearCLick">清除</button></div>
         </div>
         <div>
             大獎: {{ store.big_price }}
@@ -120,7 +120,6 @@ const clearCLick = () => {
             border: 1px solid #333;
             border-radius: 5px;
             padding: 5px 10px;
-            background-color: transparent;
             margin-bottom: 5px;
         }
     }

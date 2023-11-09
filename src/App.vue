@@ -34,7 +34,13 @@ header{
         justify-content: center;
         flex-direction: column;
         align-items: center;
+        box-sizing: border-box;
+        padding: 10px ;
         max-width: 1280px;
+        h1 {
+            margin-bottom: 10px;
+        }
+
     }
 }
 </style>
