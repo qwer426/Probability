@@ -42,7 +42,7 @@ const normal = [
         "rare": 0
     },
     {
-        "legend": 0.2,
+        "legend": 0.05,
         "rare": 0.8
     },
     {
@@ -50,27 +50,6 @@ const normal = [
         "rare": 0.95
     }
 ]
-const Equality = [
-    {
-        "legend": 1,
-        "rare": 0,
-    },
-    {
-        "legend": 1,
-        "rare": 0,
-    },
-    {
-        "legend": 1,
-        "rare": 0,
-    }
-]
-
-const currArr = computed(() => {
-    if (props.cube_name === '新對等') {
-        return Equality
-    }
-    return normal
-})
 
 const idx = ref(-1)
 
@@ -79,72 +58,24 @@ watch(() => props.cube_name, () => {
     idx.value = -1
 })
 
-const setIndex = (e, index) => {
-    if (props.cube_name !== '恢復') return
-    if (idx.value >= 0 && idx.value === index) {
-        idx.value = -1
-    } else {
-        idx.value = index
-    }
-
-}
 
 
 const getRandom = () => {
     return Math.round(Math.random() * 1000) / 1000
 }
 
-function setOtherItem() {
-    store.cubeNumObj[props.cube_name] += 1
-    store.Ability[props.cube_item] = []
+function setItem() {
+    store.additional_cubeNumObj[props.cube_name] += 1
+    newArr.value = ['', '', '']
     for (let i = 0; i < 3; i++) {
         const val = getRandom()
-        let itemList = val <= currArr.value[i].legend ? legendList.value : rareList.value
-        let item_list = val <= currArr.value[i].legend ? legend_list.value : rare_list.value
+        let itemList = val <= normal[i].legend ? legendList.value : rareList.value
+        let item_list = val <= normal[i].legend ? legend_list.value : rare_list.value
 
         let content = getPrice(itemList, item_list)
 
-        if (props.cube_name === '閃耀鏡射' && i === 1) {
-            const newVal = getRandom()
-            if (newVal <= 0.2) {
-                content = store.Ability[props.cube_item][0]
-            }
-        }
-        if (props.cube_name !== '閃耀鏡射') {
-            const preventRepeat = key => {
-                console.log('store.additional_Ability[props.cube_item]', store.additional_Ability[props.cube_item], key)
-                if (store.Ability[props.cube_item].filter(el => el.includes(key)).length === 2) {
-                    let newContent = content
-                    while (newContent === content) {
-                        newContent = getPrice(itemList, item_list)
-                    }
-                    content = newContent
-                }
-            }
-            preventRepeat('怪物')
-            preventRepeat('無視')
-            preventRepeat('道具')
-        }
-        store.Ability[props.cube_item].push(content)
-    }
-}
-
-function setLockItem() {
-    store.cubeNumObj[props.cube_name] += 1
-    newArr.value = ['', '', '']
-    let normalArr = [0, 1, 2]
-
-    normalArr = normalArr.filter(el => el !== idx.value)
-    newArr.value[idx.value] = store.Ability[props.cube_item][idx.value]
-
-    for (let i = 0; i < normalArr.length; i++) {
-        const val = getRandom()
-        let itemList = val <= currArr.value[i].legend ? legendList.value : rareList.value
-        let item_list = val <= currArr.value[i].legend ? legend_list.value : rare_list.value
-
-        let content = getPrice(itemList, item_list)
         const preventRepeat = key => {
-            if (store.Ability[props.cube_item].filter(el => el.includes(key)).length === 2) {
+            if (store.additional_Ability[props.cube_item].filter(el => el.includes(key)).length === 2) {
                 let newContent = content
                 while (newContent === content) {
                     newContent = getPrice(itemList, item_list)
@@ -155,16 +86,12 @@ function setLockItem() {
         preventRepeat('怪物')
         preventRepeat('無視')
         preventRepeat('道具')
+        if (props.cube_name === '恢復附加') {
+            newArr.value.splice(i, 1, content)
+        } else {
+            store.additional_Ability[props.cube_item][i] = content
+        }
 
-        newArr.value.splice(i, 1, content)
-    }
-}
-
-function setItem() {
-    if (props.cube_name === '恢復') {
-        setLockItem()
-    } else {
-        setOtherItem()
     }
 }
 
@@ -173,7 +100,7 @@ function resetArr() {
 }
 
 function setAbility() {
-    store.Ability[props.cube_item] = newArr.value
+    store.additional_Ability[props.cube_item] = newArr.value
     resetArr()
 }
 
@@ -186,14 +113,13 @@ function setAbility() {
             <button @click="setItem">使用</button>
         </div>
         <h1>{{ cube_name }}方塊</h1>
-        <div>顆數 : {{ store.cubeNumObj[props.cube_name] }}</div>
+        <div>顆數 : {{ store.additional_cubeNumObj[props.cube_name] }}</div>
         <div class="cubeBox">
             <div
-                v-for="(el, index) of store.Ability[props.cube_item]"
+                v-for="(el, index) of store.additional_Ability[props.cube_item]"
                 class="ability"
                 :key="`${index}${el}`"
                 :class="{active : index === idx, isH: props.cube_name === '恢復'}"
-                @click="setIndex($event, index)"
             >
                 {{ el }}
             </div>

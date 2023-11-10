@@ -34,6 +34,11 @@ const router = createRouter({
                     path: 'cube',
                     name: 'cube',
                     component: () => import('../components/CubeType.vue'),
+                },
+                {
+                    path: 'additional',
+                    name: 'additional',
+                    component: () => import('../components/CubeType.vue'),
                 }
             ]
         },

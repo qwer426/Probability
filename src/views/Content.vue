@@ -7,7 +7,11 @@ provide('data', jsonData)
 
 const route = useRoute()
 
-const path_array = ref(['apple', 'pet', 'hair', 'cube'])
+const path_array = ref(['apple', 'pet', 'hair', 'cube', 'additional'])
+
+const childItem = ref('帽子')
+
+const currentPath = ref(route.name)
 
 const target = computed(() => {
     let arr = []
@@ -38,6 +42,9 @@ const getData = async (newName) => {
         case 'cube':
             name = 'legend'
             break;
+        case 'additional':
+            name = 'AdditionalCube'
+            break;
     }
     path_data.value =  `../../public/${name}.json`
     if (newName !== 'lottery') await fetchData()
@@ -50,6 +57,10 @@ watch(
     }
 )
 
+const currentPathClick = (path) => {
+    currentPath.value = path
+}
+
 
 
 const fetchData = async () => {
@@ -57,7 +68,7 @@ const fetchData = async () => {
         const response = await fetch(path_data.value);
         if (response.ok) {
             jsonData.value = await response.json()
-            if (route.name !== 'cube') jsonData.value[route.name] = jsonData.value[route.name].sort((a, b) => a.probability - b.probability)
+            if (route.name !== 'cube' && route.name !== 'additional') jsonData.value[route.name] = jsonData.value[route.name].sort((a, b) => a.probability - b.probability)
 
         } else {
             console.error('Failed to fetch data');
@@ -77,8 +88,7 @@ onMounted(() => {
         <nav class="menu">
             <ul>
                 <li v-for="path of path_array" :key="path">
-
-                    <RouterLink class="nav_link" :to="`/lottery/${path}`">{{ path }}</RouterLink>
+                    <RouterLink class="nav_link" @click="currentPathClick(path)" :to="`/lottery/${path}`">{{ path }}</RouterLink>
                 </li>
             </ul>
         </nav>
@@ -98,7 +108,7 @@ onMounted(() => {
         </div>
         <div>
             <RouterView v-if="route.name === 'apple'" :data="jsonData[route.name]" :data_box="jsonData['apple_box']"/>
-            <RouterView v-else :data="jsonData[route.name]" :target="target"/>
+            <RouterView v-else v-model="childItem" :cubeType="currentPath" :data="jsonData[route.name]" :target="target"/>
         </div>
         <div style="width: 30%; max-width: 300px;"></div>
     </section>
