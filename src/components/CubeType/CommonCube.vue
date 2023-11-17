@@ -6,26 +6,30 @@ import {getPrice, getPriceArray} from "@/Probability";
 const data = inject('data')
 
 const props = defineProps({
-    cube_name: 'String',
-    cube_item: 'String',
+    cubeName: 'String',
+    cubeItem: 'String',
 })
 
 const store = useItemAbility()
 
 
+const isUseCube = computed(() => {
+    return store.cubeNumObj[props.cubeName] === 0
+})
+
 // 目前使用哪個部位 傳說機率
 const legendList = computed(() => {
-    return data.value.legend[props.cube_item].map(el => ({
+    return data.value.legend[props.cubeItem].map(el => ({
         item: el.item,
-        probability: el[props.cube_name],
+        probability: el[props.cubeName],
     }))
 })
 
 // 目前使用哪個部位 罕見機率
 const rareList = computed(() => {
-    return data.value.rare[props.cube_item].map(el => ({
+    return data.value.rare[props.cubeItem].map(el => ({
         item: el.item,
-        probability: el[props.cube_name],
+        probability: el[props.cubeName],
     }))
 })
 
@@ -67,7 +71,7 @@ const Equality = [
 ]
 
 const currArr = computed(() => {
-    if (props.cube_name === '新對等') {
+    if (props.cubeName === '新對等') {
         return Equality
     }
     return normal
@@ -75,12 +79,12 @@ const currArr = computed(() => {
 
 const idx = ref(-1)
 
-watch(() => props.cube_name, () => {
+watch(() => props.cubeName, () => {
     idx.value = -1
 })
 
 const setIndex = (e, index) => {
-    if (props.cube_name !== '恢復') return
+    if (props.cubeName !== '恢復') return
     // 點擊潛能列 若 idx >= 0 且 點擊 同一列 則取消標示
     if (idx.value >= 0 && idx.value === index) {
         idx.value = -1
@@ -97,8 +101,8 @@ const getRandom = () => {
 
 // 其他方塊
 function setOtherItem() {
-    store.cubeNumObj[props.cube_name] += 1
-    store.Ability[props.cube_item] = []
+    store.cubeNumObj[props.cubeName] += 1
+    store.Ability[props.cubeItem] = []
 
     // 每列 隨機取潛能值
     for (let i = 0; i < 3; i++) {
@@ -109,15 +113,15 @@ function setOtherItem() {
 
         let content = getPrice(itemList, item_list)
         // 閃耀鏡射 20%機率可以複製第一排 允許重複3排潛能
-        if (props.cube_name === '閃耀鏡射' && i === 1) {
+        if (props.cubeName === '閃耀鏡射' && i === 1) {
             const newVal = getRandom()
             if (newVal <= 0.2) {
-                content = store.Ability[props.cube_item][0]
+                content = store.Ability[props.cubeItem][0]
             }
         }
-        if (props.cube_name !== '閃耀鏡射') {
+        if (props.cubeName !== '閃耀鏡射') {
             const preventRepeat = key => {
-                if (store.Ability[props.cube_item].filter(el => el.includes(key)).length === 2) {
+                if (store.Ability[props.cubeItem].filter(el => el.includes(key)).length === 2) {
                     let newContent = content
                     while (newContent === content) {
                         newContent = getPrice(itemList, item_list)
@@ -129,19 +133,19 @@ function setOtherItem() {
             preventRepeat('無視')
             preventRepeat('道具')
         }
-        store.Ability[props.cube_item].push(content)
+        store.Ability[props.cubeItem].push(content)
     }
 }
 // 設定 恢復方塊 潛能
 // 遊戲內可以鎖定一排潛能
 function setLockItem() {
-    store.cubeNumObj[props.cube_name] += 1
+    store.cubeNumObj[props.cubeName] += 1
     newArr.value = ['', '', '']
     let normalArr = [0, 1, 2]
 
     // 透過 normalArr & idx 排除鎖定列
     normalArr = normalArr.filter(el => el !== idx.value)
-    newArr.value[idx.value] = store.Ability[props.cube_item][idx.value]
+    newArr.value[idx.value] = store.Ability[props.cubeItem][idx.value]
 
     // 每列 隨機取潛能值
     for (let i = 0; i < normalArr.length; i++) {
@@ -152,7 +156,7 @@ function setLockItem() {
 
         let content = getPrice(itemList, item_list)
         const preventRepeat = key => {
-            if (store.Ability[props.cube_item].filter(el => el.includes(key)).length === 2) {
+            if (store.Ability[props.cubeItem].filter(el => el.includes(key)).length === 2) {
                 let newContent = content
                 while (newContent === content) {
                     newContent = getPrice(itemList, item_list)
@@ -169,7 +173,7 @@ function setLockItem() {
 }
 
 function setItem() {
-    if (props.cube_name === '恢復') {
+    if (props.cubeName === '恢復') {
         setLockItem()
     } else {
         setOtherItem()
@@ -181,9 +185,14 @@ function resetArr() {
 }
 
 function setAbility() {
-    store.Ability[props.cube_item] = newArr.value
+    store.Ability[props.cubeItem] = newArr.value
     resetArr()
 }
+
+function resetCubeNum () {
+    store.resetCubeNum(props.cubeName)
+}
+
 
 </script>
 
@@ -192,15 +201,16 @@ function setAbility() {
     <div class="Hexacube">
         <div class="cubeButton">
             <button @click="setItem">使用</button>
+            <button :disabled="isUseCube" @click="resetCubeNum">重置顆數</button>
         </div>
-        <h1>{{ cube_name }}方塊</h1>
-        <div>顆數 : {{ store.cubeNumObj[props.cube_name] }}</div>
+        <h1>{{ cubeName }}方塊</h1>
+        <div>顆數 : {{ store.cubeNumObj[props.cubeName] }}</div>
         <div class="cubeBox">
             <div
-                v-for="(el, index) of store.Ability[props.cube_item]"
+                v-for="(el, index) of store.Ability[props.cubeItem]"
                 class="ability"
                 :key="`${index}${el}`"
-                :class="{active : index === idx, isH: props.cube_name === '恢復'}"
+                :class="{active : index === idx, isH: props.cubeName === '恢復'}"
                 @click="setIndex($event, index)"
             >
                 {{ el }}
@@ -211,7 +221,7 @@ function setAbility() {
             <div
                 v-for="(el, index) of newArr"
                 class="ability"
-                :class="{isH: props.cube_name === '恢復'}"
+                :class="{isH: props.cubeName === '恢復'}"
                 :key="`${index}${el}`"
             >
                 {{ el }}

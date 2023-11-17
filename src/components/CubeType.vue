@@ -99,7 +99,7 @@ const currentPathArr = computed(() => {
 let cube = shallowRef(HexaCube)
 
 const cubeChin = ref('')
-const cube_item = ref('帽子')
+const cubeItem = ref('帽子')
 const idx = ref(0)
 
 
@@ -128,12 +128,12 @@ onMounted(() => {
             <select name="cube" id="cube_select" @change="onCubeTypeChange">
                 <option v-for="el of currentArr" :key="el.cubeChin">{{ el.cubeChin }}</option>
             </select>
-            <select name="cube_item" id="cube_item" v-model="cube_item" @change="onCubeTypeItemChange">
+            <select name="cubeItem" id="cubeItem" v-model="cubeItem" @change="onCubeTypeItemChange">
                 <option v-for="el of currentPathArr" :value="el">{{ el }}</option>
             </select>
         </div>
         <KeepAlive>
-            <component :is="cube" :cube_name="cubeChin" :cube_item="cube_item"></component>
+            <component :is="cube" :cubeName="cubeChin" :cubeItem="cubeItem"></component>
         </KeepAlive>
     </section>
 </template>
@@ -146,7 +146,7 @@ section {
         margin-bottom: 10px;
     }
 
-    #cube_select, #cube_item {
+    #cube_select, #cubeItem {
         width: 100px;
         padding: 8px 15px 5px;
         font-size: 16px;

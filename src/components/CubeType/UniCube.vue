@@ -6,8 +6,8 @@ import {getPrice, getPriceArray} from "@/Probability";
 
 const data = inject('data')
 const props = defineProps({
-    cube_name: 'String',
-    cube_item: 'String',
+    cubeName: 'String',
+    cubeItem: 'String',
 })
 
 
@@ -16,17 +16,17 @@ const store = useItemAbility()
 
 // 目前使用哪個部位 傳說機率
 const legendList = computed(() => {
-    return data.value.legend[props.cube_item].map(el => ({
+    return data.value.legend[props.cubeItem].map(el => ({
         item: el.item,
-        probability: el[props.cube_name],
+        probability: el[props.cubeName],
     }))
 })
 
 // 目前使用哪個部位 罕見機率
 const rareList = computed(() => {
-    return data.value.rare[props.cube_item].map(el => ({
+    return data.value.rare[props.cubeItem].map(el => ({
         item: el.item,
-        probability: el[props.cube_name],
+        probability: el[props.cubeName],
     }))
 })
 
@@ -55,6 +55,10 @@ const arr = [
 // 是否可使用方塊
 const isHaveChance = ref(0)
 
+const isUseCube = computed(() => {
+    return store.cubeNumObj[props.cubeName] === 0
+})
+
 const setProbability = ref(null)
 
 const idx = computed(() => {
@@ -67,7 +71,7 @@ const getRandom = () => {
 
 const getProbability = () => {
     setProbability.value = getRandom()
-    store.cubeNumObj[props.cube_name] += 1
+    store.cubeNumObj[props.cubeName] += 1
     if (isHaveChance.value === 0) isHaveChance.value += 1
 }
 
@@ -82,7 +86,7 @@ const setItem = () => {
     // 防止 3無 3boss 3道具
 
     const preventRepeat = key => {
-        if (store.Ability[props.cube_item].filter(el => el.includes(key)).length === 2) {
+        if (store.Ability[props.cubeItem].filter(el => el.includes(key)).length === 2) {
             let newContent = content
             while (newContent === content) {
                 newContent = getPrice(itemList, item_list)
@@ -96,8 +100,11 @@ const setItem = () => {
 
     // 處理潛能數值顯示
     if (idx) {
-        store.Ability[props.cube_item][idx.value] = content
+        store.Ability[props.cubeItem][idx.value] = content
     }
+}
+function resetCubeNum () {
+    store.resetCubeNum(props.cubeName)
 }
 
 </script>
@@ -108,12 +115,13 @@ const setItem = () => {
         <div class="cubeButton">
             <button @click="getProbability">再一次</button>
             <button :disabled="!isHaveChance" @click="setItem">使用</button>
+            <button :disabled="isUseCube" @click="resetCubeNum">重置顆數</button>
         </div>
-        <h1>{{ cube_name }}方塊</h1>
-        <div>顆數 : {{ store.cubeNumObj[props.cube_name] }}</div>
+        <h1>{{ cubeName }}方塊</h1>
+        <div>顆數 : {{ store.cubeNumObj[props.cubeName] }}</div>
         <div class="cubeBox">
             <div
-                v-for="(el, index) of store.Ability[props.cube_item]"
+                v-for="(el, index) of store.Ability[props.cubeItem]"
                 class="ability"
                 :key="`${index}${el}`"
                 :class="{ active: idx === index }"
