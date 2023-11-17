@@ -1,5 +1,5 @@
 <script setup>
-import {computed, nextTick, onMounted, ref, shallowRef} from "vue";
+import {computed, onMounted, ref, shallowRef} from "vue";
 import HexaCube from "@/components/CubeType/HexaCube.vue";
 import UniCube from "@/components/CubeType/UniCube.vue";
 import CommonCube from "@/components/CubeType/CommonCube.vue";
@@ -18,7 +18,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 
-const cube_arr = ref([
+const cubeType = ref([
     {
         cube: 'HexaCube',
         cubeCom: HexaCube,
@@ -46,7 +46,7 @@ const cube_arr = ref([
     }
 ])
 
-const additional_cube_arr = ref([
+const additional_cubeType = ref([
     {
         cube: 'CommonCube',
         cubeCom: AdditionalCube,
@@ -59,7 +59,7 @@ const additional_cube_arr = ref([
     },
 ])
 
-const cube_item_arr = ref([
+const cubeTypeItem = ref([
     "帽子",
     "上衣,套服",
     "下衣",
@@ -71,7 +71,7 @@ const cube_item_arr = ref([
     "徽章"
 ])
 
-const additional_item_cube = ref([
+const additional_cubeTypeItem = ref([
     "帽子",
     "上衣, 下衣, 套服, 披風, 腰帶, 鞋子, 肩膀裝飾, 機器心臟",
     "手套",
@@ -80,39 +80,43 @@ const additional_item_cube = ref([
     "輔助武器",
     "徽章",
 ])
+// 透過props判斷 顯示目前為主潛還附加潛
 const currentArr = computed(() => {
     let arr = []
-    if (props.cubeType === 'cube') arr = cube_arr.value
-    else if (props.cubeType === 'additional') arr = additional_cube_arr.value
+    if (props.cubeType === 'cube') arr = cubeType.value
+    else if (props.cubeType === 'additional') arr = additional_cubeType.value
     return arr
 })
 
+// 透過props判斷 顯示目前為主潛還附加潛 的裝備類別
 const currentPathArr = computed(() => {
     let arr = []
-    if (props.cubeType === 'cube') arr = cube_item_arr.value
-    else if (props.cubeType === 'additional') arr = additional_item_cube.value
+    if (props.cubeType === 'cube') arr = cubeTypeItem.value
+    else if (props.cubeType === 'additional') arr = additional_cubeTypeItem.value
     return arr
 })
-const cube = shallowRef(HexaCube)
+
+let cube = shallowRef(HexaCube)
 
 const cubeChin = ref('')
 const cube_item = ref('帽子')
 const idx = ref(0)
 
-const onChange = (e) => {
+
+// 方塊選擇
+const onCubeTypeChange = (e) => {
     cubeChin.value = e.target.value
     idx.value = currentArr.value.findIndex(el => el.cubeChin === cubeChin.value)
-    cube.value = currentArr.value[idx.value].cubeCom
-
+    cube = shallowRef(currentArr.value[idx.value].cubeCom)
 }
 
-const itemOnChange = (e) => {
-    console.log('update:childItem', e.target.value)
+// 部位選擇
+const onCubeTypeItemChange = (e) => {
     emit('update:modelValue', e.target.value)
 }
 
 onMounted(() => {
-    cube.value = currentArr.value[idx.value].cubeCom
+    cube = shallowRef(currentArr.value[idx.value].cubeCom)
     cubeChin.value = currentArr.value[0].cubeChin
 })
 
@@ -121,10 +125,10 @@ onMounted(() => {
 <template>
     <section>
         <div class="selectGroup">
-            <select name="cube" id="cube_select" @change="onChange">
-                <option v-for="el of currentArr">{{ el.cubeChin }}</option>
+            <select name="cube" id="cube_select" @change="onCubeTypeChange">
+                <option v-for="el of currentArr" :key="el.cubeChin">{{ el.cubeChin }}</option>
             </select>
-            <select name="cube_item" id="cube_item" v-model="cube_item" @change="itemOnChange">
+            <select name="cube_item" id="cube_item" v-model="cube_item" @change="onCubeTypeItemChange">
                 <option v-for="el of currentPathArr" :value="el">{{ el }}</option>
             </select>
         </div>

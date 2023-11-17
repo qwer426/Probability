@@ -52,6 +52,7 @@ const arr = [
     }
 ]
 
+// 是否可使用方塊
 const isHaveChance = ref(0)
 
 const setProbability = ref(null)
@@ -71,6 +72,7 @@ const getProbability = () => {
 }
 
 const setItem = () => {
+    // 決定潛能 為 傳說 or 罕見 潛能
     let val = getRandom()
     let itemList = val <= 0.15 ? legendList.value : rareList.value
     let item_list = val <= 0.15 ? legend_list.value : rare_list.value

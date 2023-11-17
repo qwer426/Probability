@@ -68,12 +68,14 @@ function setItem() {
     store.additional_cubeNumObj[props.cube_name] += 1
     newArr.value = ['', '', '']
     for (let i = 0; i < 3; i++) {
+        // 隨機數決定是否為傳說數值
         const val = getRandom()
         let itemList = val <= normal[i].legend ? legendList.value : rareList.value
         let item_list = val <= normal[i].legend ? legend_list.value : rare_list.value
 
         let content = getPrice(itemList, item_list)
 
+        // 遊戲設定 這三種不會出現三排 怪物 無視 道具
         const preventRepeat = key => {
             if (store.additional_Ability[props.cube_item].filter(el => el.includes(key)).length === 2) {
                 let newContent = content

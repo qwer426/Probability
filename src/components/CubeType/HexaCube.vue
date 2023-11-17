@@ -71,6 +71,7 @@ const getProbability = () => {
     store.cubeNumObj[props.cube_name] += 1
     Probability.value = []
     for (let i = 0; i < 6; i++) {
+        // 決定潛能 為 傳說 or 罕見 潛能
         const val = getRandom()
         let itemList = val <= arr[i].legend ? legendList.value : rareList.value
         let item_list = val <= arr[i].legend ? legend_list.value : rare_list.value
@@ -96,6 +97,17 @@ const getProbability = () => {
     isDice.value = true
 }
 
+// 紀錄選擇哪三排
+const lock = ref([])
+const lockAbility = (idx) => {
+    const lockIdx = lock.value.findIndex(el => el === idx)
+    if (lockIdx !== -1) {
+        lock.value.splice(lockIdx, 1)
+    } else if (lock.value.length < 3) {
+        lock.value.push(idx)
+    }
+}
+// 選擇哪三排
 const setProbability = () => {
     if (lock.value.length !== 3) {
         console.log('未選3排')
@@ -106,17 +118,6 @@ const setProbability = () => {
         isDice.value = false
         lock.value = []
 
-    }
-}
-
-// 紀錄選擇哪三排
-const lock = ref([])
-const lockAbility = (idx) => {
-    const lockIdx = lock.value.findIndex(el => el === idx)
-    if (lockIdx !== -1) {
-        lock.value.splice(lockIdx, 1)
-    } else if (lock.value.length < 3) {
-        lock.value.push(idx)
     }
 }
 

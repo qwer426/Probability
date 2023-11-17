@@ -50,6 +50,7 @@ const normal = [
         "rare": 0.95
     }
 ]
+// 新對等方塊只會出傳說潛能
 const Equality = [
     {
         "legend": 1,
@@ -75,12 +76,12 @@ const currArr = computed(() => {
 const idx = ref(-1)
 
 watch(() => props.cube_name, () => {
-    console.log(props.cube_name)
     idx.value = -1
 })
 
 const setIndex = (e, index) => {
     if (props.cube_name !== '恢復') return
+    // 點擊潛能列 若 idx >= 0 且 點擊 同一列 則取消標示
     if (idx.value >= 0 && idx.value === index) {
         idx.value = -1
     } else {
@@ -94,16 +95,20 @@ const getRandom = () => {
     return Math.round(Math.random() * 1000) / 1000
 }
 
+// 其他方塊
 function setOtherItem() {
     store.cubeNumObj[props.cube_name] += 1
     store.Ability[props.cube_item] = []
+
+    // 每列 隨機取潛能值
     for (let i = 0; i < 3; i++) {
+        // 決定潛能 為 傳說 or 罕見 潛能
         const val = getRandom()
         let itemList = val <= currArr.value[i].legend ? legendList.value : rareList.value
         let item_list = val <= currArr.value[i].legend ? legend_list.value : rare_list.value
 
         let content = getPrice(itemList, item_list)
-
+        // 閃耀鏡射 20%機率可以複製第一排 允許重複3排潛能
         if (props.cube_name === '閃耀鏡射' && i === 1) {
             const newVal = getRandom()
             if (newVal <= 0.2) {
@@ -112,7 +117,6 @@ function setOtherItem() {
         }
         if (props.cube_name !== '閃耀鏡射') {
             const preventRepeat = key => {
-                console.log('store.additional_Ability[props.cube_item]', store.additional_Ability[props.cube_item], key)
                 if (store.Ability[props.cube_item].filter(el => el.includes(key)).length === 2) {
                     let newContent = content
                     while (newContent === content) {
@@ -128,16 +132,20 @@ function setOtherItem() {
         store.Ability[props.cube_item].push(content)
     }
 }
-
+// 設定 恢復方塊 潛能
+// 遊戲內可以鎖定一排潛能
 function setLockItem() {
     store.cubeNumObj[props.cube_name] += 1
     newArr.value = ['', '', '']
     let normalArr = [0, 1, 2]
 
+    // 透過 normalArr & idx 排除鎖定列
     normalArr = normalArr.filter(el => el !== idx.value)
     newArr.value[idx.value] = store.Ability[props.cube_item][idx.value]
 
+    // 每列 隨機取潛能值
     for (let i = 0; i < normalArr.length; i++) {
+        // 決定潛能 為 傳說 or 罕見 潛能
         const val = getRandom()
         let itemList = val <= currArr.value[i].legend ? legendList.value : rareList.value
         let item_list = val <= currArr.value[i].legend ? legend_list.value : rare_list.value
